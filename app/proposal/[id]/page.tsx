@@ -33,10 +33,13 @@ async function MemberProposal({ params }: Params) {
     <section className="rounded-3xl border border-stone-200 bg-white/70 p-6 shadow-sm backdrop-blur sm:p-10">
       <h2 className="mb-8 text-center text-xs tracking-[0.3em] text-stone-500 uppercase">Your itinerary</h2>
       <Itinerary items={proposal.items} />
-      <div className="mt-10 flex items-baseline justify-between border-t border-stone-200 pt-6">
+      <div className="mt-12 flex items-baseline justify-between border-t border-stone-200 pt-6">
         <span className="text-xs tracking-[0.3em] text-stone-500 uppercase">Total</span>
-        <span className="font-serif text-4xl text-stone-900 tabular-nums">{formatPrice(proposal.total)}</span>
+        <span className="text-3xl font-light text-stone-900 tabular-nums">{formatPrice(proposal.total)}</span>
       </div>
+      <p className="mt-10 text-center font-serif text-lg text-stone-600 italic">
+        Curated for you by your Exclusive Resorts concierge
+      </p>
     </section>
   );
 
