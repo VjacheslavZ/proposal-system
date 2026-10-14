@@ -14,3 +14,8 @@ export function formatDate(date: Date | string, options: Intl.DateTimeFormatOpti
 export function formatDateTime(date: Date | string): string {
   return formatDate(date, { dateStyle: "medium", timeStyle: "short" });
 }
+
+/** A compact range such as "Dec 15 – 22, 2027". */
+export function formatDateRange(start: Date | string, end: Date | string): string {
+  return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeZone: "UTC" }).formatRange(new Date(start), new Date(end));
+}

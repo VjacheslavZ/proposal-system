@@ -110,7 +110,7 @@ prisma.config.ts
 1. Trip header: member, villa, destination, arrival/departure dates, number of nights.
 2. Proposal builder: category cards in two columns list the example activities with a placeholder estimate (~$500). Picking a category pre-fills the first example as the title and $500 as the price; the concierge then fills description and date/time. The added items are listed with a remove action and a running total.
 3. Actions: **Preview** (dialog showing the member rendering, shared with the table's **View**), **Save draft**, **Send now** (create and send in one step).
-4. Proposals table: status badge, total, created/sent dates, **View** (itinerary dialog, any status), **Send** for drafts, link to the member view for sent proposals.
+4. Proposals table: destination (villa + location), arrival – departure dates, status badge, total and item count, created/sent dates, **View** (itinerary dialog, any status), **Send** for drafts, link to the member view for sent proposals.
 
 **Member view (`/proposal/[id]`)** — premium feel:
 - Serif headings, generous whitespace, muted palette, gradients and typography only (no photos).

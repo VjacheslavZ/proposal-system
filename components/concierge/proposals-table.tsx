@@ -6,8 +6,17 @@ import { StatusBadge } from "@/components/proposal/status-badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatDateTime, formatPrice } from "@/lib/format";
+import { formatDate, formatDateRange, formatPrice } from "@/lib/format";
 import type { ProposalListItem } from "@/lib/services/proposals";
+
+function DateTimeCell({ value }: { value: Date }) {
+  return (
+    <>
+      <div>{formatDate(value)}</div>
+      <div className="text-muted-foreground">{formatDate(value, { timeStyle: "short" })}</div>
+    </>
+  );
+}
 
 export function ProposalsTable({ proposals }: { proposals: ProposalListItem[] }) {
   return (
@@ -22,10 +31,11 @@ export function ProposalsTable({ proposals }: { proposals: ProposalListItem[] })
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Created</TableHead>
+                <TableHead>Destination</TableHead>
+                <TableHead>Arrival – departure</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Items</TableHead>
                 <TableHead className="text-right">Total</TableHead>
+                <TableHead>Created</TableHead>
                 <TableHead>Sent</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -33,15 +43,26 @@ export function ProposalsTable({ proposals }: { proposals: ProposalListItem[] })
             <TableBody>
               {proposals.map((proposal) => (
                 <TableRow key={proposal.id}>
-                  <TableCell>{formatDateTime(proposal.created_at)}</TableCell>
+                  <TableCell>
+                    <div>{proposal.reservation.villa}</div>
+                    <div className="text-muted-foreground">{proposal.reservation.destination}</div>
+                  </TableCell>
+                  <TableCell>
+                    {formatDateRange(proposal.reservation.arrival_date, proposal.reservation.departure_date)}
+                  </TableCell>
                   <TableCell>
                     <StatusBadge status={proposal.status} />
                   </TableCell>
-                  <TableCell className="text-right tabular-nums">{proposal.item_count}</TableCell>
-                  <TableCell className="text-right tabular-nums">{formatPrice(proposal.total)}</TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {proposal.sent_at ? formatDateTime(proposal.sent_at) : "—"}
+                  <TableCell className="text-right tabular-nums">
+                    <div>{formatPrice(proposal.total)}</div>
+                    <div className="text-muted-foreground">
+                      {proposal.item_count} {proposal.item_count === 1 ? "item" : "items"}
+                    </div>
                   </TableCell>
+                  <TableCell>
+                    <DateTimeCell value={proposal.created_at} />
+                  </TableCell>
+                  <TableCell>{proposal.sent_at ? <DateTimeCell value={proposal.sent_at} /> : "—"}</TableCell>
                   <TableCell className="space-x-2 text-right whitespace-nowrap">
                     <ItineraryDialog
                       trigger={
