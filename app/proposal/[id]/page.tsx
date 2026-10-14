@@ -6,7 +6,7 @@ import { ProposalActions } from "@/components/member/proposal-actions";
 import { ProposalHero } from "@/components/member/proposal-hero";
 import { Itinerary } from "@/components/proposal/itinerary";
 import { ApiError } from "@/lib/api-errors";
-import { formatPrice } from "@/lib/format";
+import { formatDateRange, formatPrice } from "@/lib/format";
 import { getProposal } from "@/lib/services/proposals";
 
 type Params = { params: Promise<{ id: string }> };
@@ -40,20 +40,22 @@ async function MemberProposal({ params }: Params) {
     </section>
   );
 
-  if (proposal.status === "paid") {
-    return (
-      <>
-        <PaidConfirmation proposal={proposal} />
-        {itinerary}
-      </>
-    );
-  }
+  const { reservation } = proposal;
 
   return (
     <>
-      <ProposalHero reservation={proposal.reservation} />
+      <ProposalHero reservation={reservation} />
       {itinerary}
-      <ProposalActions proposalId={proposal.id} status={proposal.status} />
+      {proposal.status === "paid" ? (
+        <PaidConfirmation
+          firstName={reservation.member.name.split(" ")[0]}
+          villa={reservation.villa}
+          dates={formatDateRange(reservation.arrival_date, reservation.departure_date)}
+          total={proposal.total}
+        />
+      ) : (
+        <ProposalActions proposalId={proposal.id} status={proposal.status} />
+      )}
     </>
   );
 }

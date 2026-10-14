@@ -10,7 +10,7 @@ import { apiRequest } from "@/lib/api-client";
 /** The next step the member can take for each status. */
 const ACTIONS: Partial<Record<ProposalStatus, { label: string; next: ProposalStatus; hint: string }>> = {
   sent: {
-    label: "Approve itinerary",
+    label: "Approve",
     next: "approved",
     hint: "Approve the itinerary to continue to payment.",
   },
