@@ -75,7 +75,19 @@ Status flow: `draft → sent → approved → paid`. Only single forward steps a
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) |
 | POST | `/api/proposals/[id]/send` | Mark as sent and log the "email" |
 
-Errors use one format: `{ "error": { "code": "...", "message": "..." } }` with `400`, `404` or `409` status codes.
+Errors use one format: `{ "error": { "code": "...", "message": "...", "details": [...] } }` with `400`, `404` or `409` status codes (`details` lists validation issues).
+
+- JSON fields use the same snake_case names as the database columns; `price` is in USD cents.
+- Line items must be scheduled within the stay (arrival day through departure day).
+- `PATCH` with `status: "sent"` runs the same logic as `POST /send`, so an email is always recorded.
+
+Example — create a draft:
+
+```bash
+curl -X POST http://localhost:3000/api/proposals \
+  -H 'content-type: application/json' \
+  -d '{"reservation_id":"reservation_punta_mita","items":[{"category":"dining","title":"Private chef dinner","description":"Five-course tasting menu","scheduled_at":"2027-12-16T19:30:00Z","price":125000}]}'
+```
 
 ## Assumptions
 

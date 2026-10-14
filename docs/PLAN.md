@@ -62,7 +62,15 @@ Only single forward steps are allowed; anything else returns `409 Conflict`. The
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) | 400, 404, 409 |
 | POST | `/api/proposals/[id]/send` | Mark as sent, write `sent_emails` row, log the email to console | 404, 409 |
 
-Error format: `{ "error": { "code": string, "message": string } }`.
+Error format: `{ "error": { "code": string, "message": string, "details"?: [...] } }`.
+
+API details:
+- JSON fields use the same snake_case names as the database columns.
+- `price` is an integer in USD cents; `scheduled_at` is an ISO 8601 datetime with an offset (the UI sends UTC wall-clock time).
+- Line items must be scheduled within the stay (arrival day through departure day).
+- `PATCH` with `status: "sent"` goes through the same send logic as `POST /send`, so an email is always recorded.
+- Status updates use a conditional update on the current status, so concurrent requests cannot apply the same transition twice.
+- Email links use the `APP_URL` environment variable (default `http://localhost:3000`).
 
 Business logic lives in `lib/services/`; both route handlers and Server Components call it, so pages do not fetch their own API over HTTP.
 
@@ -81,6 +89,7 @@ lib/
   prisma.ts                 Prisma client singleton
   services/                 Proposal and reservation logic
   validation.ts             zod schemas
+  api-errors.ts             ApiError, error handling wrapper for route handlers
   proposal-status.ts        Status transition rules
   categories.ts             Category labels and example titles
   format.ts                 Money and date formatting
@@ -113,7 +122,7 @@ prisma.config.ts
 |---|---|---|---|
 | 1 | Scaffold Next.js + Tailwind + shadcn/ui, Docker Compose, verify hot reload | 0:40 | Done |
 | 2 | Prisma schema, migration, seed, Prisma client | 0:30 | Done |
-| 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | |
+| 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | Done |
 | 4 | Concierge dashboard | 1:20 | |
 | 5 | Member view and payment confirmation | 1:00 | |
 | 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | |
