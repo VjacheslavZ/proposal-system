@@ -1,9 +1,10 @@
-import { NextResponse } from "next/server";
+import { connection, NextResponse } from "next/server";
 import { readJson, withErrorHandling } from "@/lib/api-errors";
 import { createProposal, listProposals } from "@/lib/services/proposals";
 import { createProposalSchema } from "@/lib/validation";
 
 export const GET = withErrorHandling(async () => {
+  await connection(); // always read fresh data instead of prerendering
   return NextResponse.json(await listProposals());
 });
 
