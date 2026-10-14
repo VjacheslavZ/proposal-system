@@ -1,0 +1,19 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: file:./data/dev.db
+      NEXT_TELEMETRY_DISABLED: "1"
+    volumes:
+      - .:/app
+      # Keep Linux-built dependencies and build output inside the container.
+      - /app/node_modules
+      - /app/.next
+      - db-data:/app/data
+
+volumes:
+  db-data:
