@@ -50,3 +50,6 @@ next-env.d.ts
 
 # assignment brief (not part of the solution)
 /Full Stack Developer TT.pdf
+
+# generated Prisma client
+/generated
