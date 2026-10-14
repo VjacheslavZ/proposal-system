@@ -8,6 +8,7 @@ services:
     environment:
       DATABASE_URL: file:./data/dev.db
       NEXT_TELEMETRY_DISABLED: "1"
+      PRISMA_HIDE_UPDATE_MESSAGE: "1"
     volumes:
       - .:/app
       # Keep Linux-built dependencies and build output inside the container.
