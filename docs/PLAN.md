@@ -131,7 +131,7 @@ prisma.config.ts
 | 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | Done |
 | 4 | Concierge dashboard | 1:20 | Done |
 | 5 | Member view and payment confirmation | 1:00 | Done |
-| 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | |
+| 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | Done |
 | 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | |
 
 ## Out of scope
