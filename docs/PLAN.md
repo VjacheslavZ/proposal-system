@@ -112,7 +112,7 @@ prisma.config.ts
 | # | Stage | Estimate | Status |
 |---|---|---|---|
 | 1 | Scaffold Next.js + Tailwind + shadcn/ui, Docker Compose, verify hot reload | 0:40 | Done |
-| 2 | Prisma schema, migration, seed, Prisma client | 0:30 | |
+| 2 | Prisma schema, migration, seed, Prisma client | 0:30 | Done |
 | 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | |
 | 4 | Concierge dashboard | 1:20 | |
 | 5 | Member view and payment confirmation | 1:00 | |
