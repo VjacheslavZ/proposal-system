@@ -113,8 +113,8 @@ prisma.config.ts
 4. Proposals table: destination (villa + location), arrival – departure dates, status badge, total and item count, created/sent dates, **View** (itinerary dialog, any status), **Send** for drafts, link to the member view for sent proposals.
 
 **Member view (`/proposal/[id]`)** — premium feel:
-- Serif headings, generous whitespace, muted palette, gradients and typography only (no photos).
-- Itinerary grouped by day, category icons, prominent total.
+- Cormorant Garamond serif headings with Geist body text, generous whitespace, warm stone/ivory gradient, typography only (no photos).
+- Hero (villa, personal greeting, dates and nights), itinerary card grouped by day with category icons, prominent total — the same `Itinerary` component as the concierge preview.
 - Actions depend on status: `sent` → **Approve**, `approved` → **Pay & Lock In**, `paid` → confirmation screen. Drafts are not visible to members (404).
 
 ## Seed data
@@ -130,7 +130,7 @@ prisma.config.ts
 | 2 | Prisma schema, migration, seed, Prisma client | 0:30 | Done |
 | 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | Done |
 | 4 | Concierge dashboard | 1:20 | Done |
-| 5 | Member view and payment confirmation | 1:00 | |
+| 5 | Member view and payment confirmation | 1:00 | Done |
 | 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | |
 | 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | |
 
