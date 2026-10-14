@@ -32,7 +32,7 @@ export async function createProposal(input: CreateProposalInput) {
     throw new ApiError(400, "VALIDATION_ERROR", `"${outsideStay.title}" is scheduled outside the reservation dates`);
   }
 
-  return prisma.proposal.create({
+  const proposal = await prisma.proposal.create({
     data: {
       reservation_id: reservation.id,
       items: {
@@ -41,6 +41,7 @@ export async function createProposal(input: CreateProposalInput) {
     },
     include: proposalInclude,
   });
+  return { ...proposal, total: sumPrices(proposal.items) };
 }
 
 export async function listProposals() {
