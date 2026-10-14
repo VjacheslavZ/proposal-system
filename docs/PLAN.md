@@ -132,8 +132,10 @@ prisma.config.ts
 | 4 | Concierge dashboard | 1:20 | Done |
 | 5 | Member view and payment confirmation | 1:00 | Done |
 | 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | Done |
-| 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | |
+| 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | Done |
 
 ## Out of scope
 
-Stretch goals (notes field, editing drafts, day-by-day timeline, optimistic UI, animations, multiple members), authentication, tests, time zones, status history, cancellation. These are documented in the README.
+Stretch goals (notes field, editing drafts, optimistic UI, multiple members), authentication, tests, time zones, status history, cancellation. These are documented in the README.
+
+Two stretch goals came in as part of the member-view design work: the day-by-day timeline and the animated payment confirmation.
