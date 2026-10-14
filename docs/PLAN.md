@@ -24,7 +24,7 @@ Concierge Itinerary Proposal System — Full Stack Developer assessment.
 Docker details:
 - Source code is bind-mounted into the container, so edits on the host trigger Fast Refresh.
 - `node_modules` and `.next` live in anonymous volumes (Linux-built native modules must not clash with the host).
-- The SQLite file lives in the named volume `db-data` mounted at `/app/data`.
+- The SQLite file `data/dev.db` is part of the bind mount, so Docker and the host share one database that can be opened in any SQLite client.
 - Entrypoint: `prisma generate` → `prisma migrate deploy` → `prisma db seed` → `next dev`.
 
 ## Data model

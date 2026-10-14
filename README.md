@@ -24,8 +24,11 @@ Useful commands:
 ```bash
 docker compose logs -f app       # follow logs (sent "emails" are printed here)
 docker compose up -d --build     # rebuild after changing dependencies
-docker compose down -v           # stop and delete the database volume
+docker compose down              # stop the app
+rm -rf data                      # reset the database (re-created and seeded on next start)
 ```
+
+The SQLite database is the file `data/dev.db`, shared between Docker and the host, so you can open it in any SQLite client (DataGrip, DB Browser for SQLite, `sqlite3 data/dev.db`). Both run options use the same file.
 
 ### Option 2 — Without Docker
 
