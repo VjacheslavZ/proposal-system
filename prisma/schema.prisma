@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Member {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  reservations Reservation[]
+
+  @@map("members")
+}
+
+model Reservation {
+  id             String     @id @default(cuid())
+  member_id      String
+  member         Member     @relation(fields: [member_id], references: [id])
+  destination    String
+  villa          String
+  arrival_date   DateTime
+  departure_date DateTime
+  proposals      Proposal[]
+
+  @@map("reservations")
+}
+
+model Proposal {
+  id             String         @id @default(cuid())
+  reservation_id String
+  reservation    Reservation    @relation(fields: [reservation_id], references: [id])
+  status         ProposalStatus @default(draft)
+  created_at     DateTime       @default(now())
+  sent_at        DateTime?
+  items          ProposalItem[]
+  emails         SentEmail[]
+
+  @@map("proposals")
+}
+
+model ProposalItem {
+  id           String   @id @default(cuid())
+  proposal_id  String
+  proposal     Proposal @relation(fields: [proposal_id], references: [id])
+  category     Category
+  title        String
+  description  String
+  scheduled_at DateTime
+  /// Price in USD cents to avoid floating-point rounding errors.
+  price        Int
+
+  @@map("proposal_items")
+}
+
+model SentEmail {
+  id           String   @id @default(cuid())
+  proposal_id  String
+  proposal     Proposal @relation(fields: [proposal_id], references: [id])
+  to_email     String
+  sent_at      DateTime @default(now())
+  body_preview String
+
+  @@map("sent_emails")
+}
+
+enum ProposalStatus {
+  draft
+  sent
+  approved
+  paid
+}
+
+enum Category {
+  dining
+  activities
+  wellness
+  excursions
+  transport
+  experiences
+}
