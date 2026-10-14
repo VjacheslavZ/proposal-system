@@ -73,7 +73,7 @@ Status flow: `draft → sent → approved → paid`. Only single forward steps a
 |---|---|---|
 | GET | `/api/reservations` | Member's current reservation |
 | POST | `/api/proposals` | Create a draft proposal with line items |
-| GET | `/api/proposals` | List proposals with status |
+| GET | `/api/proposals` | List proposals with status, line items and total |
 | GET | `/api/proposals/[id]` | Single proposal with line items |
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) |
 | POST | `/api/proposals/[id]/send` | Mark as sent and log the "email" |

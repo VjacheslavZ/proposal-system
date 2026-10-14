@@ -1,33 +1,27 @@
 "use client";
 
-import { Eye } from "lucide-react";
 import { Itinerary, type ItineraryItem } from "@/components/proposal/itinerary";
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { formatPrice } from "@/lib/format";
 
 type Props = {
-  memberName: string;
-  villa: string;
+  /** The element that opens the dialog, e.g. a `<Button>`. */
+  trigger: React.ReactElement;
+  title: string;
+  description: string;
   items: ItineraryItem[];
   total: number;
 };
 
-export function PreviewDialog({ memberName, villa, items, total }: Props) {
+/** Shows an itinerary the way the member sees it: used for the draft preview and for viewing saved proposals. */
+export function ItineraryDialog({ trigger, title, description, items, total }: Props) {
   return (
     <Dialog>
-      <DialogTrigger
-        render={
-          <Button variant="outline" disabled={items.length === 0}>
-            <Eye aria-hidden />
-            Preview
-          </Button>
-        }
-      />
+      <DialogTrigger render={trigger} />
       <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Proposal for {memberName}</DialogTitle>
-          <DialogDescription>{villa} — this is what the member will see.</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <Itinerary items={items} />
         <div className="flex items-baseline justify-between border-t pt-4">

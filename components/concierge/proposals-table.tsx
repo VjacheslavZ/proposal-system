@@ -1,8 +1,9 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Eye } from "lucide-react";
 import Link from "next/link";
 import { SendProposalButton } from "@/components/concierge/send-proposal-button";
+import { ItineraryDialog } from "@/components/proposal/itinerary-dialog";
 import { StatusBadge } from "@/components/proposal/status-badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatDateTime, formatPrice } from "@/lib/format";
@@ -41,7 +42,19 @@ export function ProposalsTable({ proposals }: { proposals: ProposalListItem[] })
                   <TableCell className="text-muted-foreground">
                     {proposal.sent_at ? formatDateTime(proposal.sent_at) : "—"}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="space-x-2 text-right whitespace-nowrap">
+                    <ItineraryDialog
+                      trigger={
+                        <Button size="sm" variant="outline">
+                          <Eye aria-hidden />
+                          View
+                        </Button>
+                      }
+                      title={`Proposal for ${proposal.reservation.member.name}`}
+                      description={`${proposal.reservation.villa} · ${proposal.status}`}
+                      items={proposal.items}
+                      total={proposal.total}
+                    />
                     {proposal.status === "draft" ? (
                       <SendProposalButton proposalId={proposal.id} />
                     ) : (

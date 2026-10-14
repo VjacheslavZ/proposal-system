@@ -1,12 +1,12 @@
 "use client";
 
-import { Save, Send, Trash2 } from "lucide-react";
+import { Eye, Save, Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ItemForm } from "@/components/concierge/item-form";
-import { PreviewDialog } from "@/components/concierge/preview-dialog";
 import type { ItineraryItem } from "@/components/proposal/itinerary";
+import { ItineraryDialog } from "@/components/proposal/itinerary-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiRequest } from "@/lib/api-client";
@@ -122,7 +122,18 @@ export function ProposalBuilder({ reservationId, memberName, memberEmail, villa,
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <PreviewDialog memberName={memberName} villa={villa} items={items} total={total} />
+            <ItineraryDialog
+              trigger={
+                <Button variant="outline" disabled={items.length === 0}>
+                  <Eye aria-hidden />
+                  Preview
+                </Button>
+              }
+              title={`Proposal for ${memberName}`}
+              description={`${villa} — this is what the member will see.`}
+              items={items}
+              total={total}
+            />
             <Button variant="outline" disabled={items.length === 0 || pending} onClick={() => submit(false)}>
               <Save aria-hidden />
               Save draft

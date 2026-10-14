@@ -57,7 +57,7 @@ Only single forward steps are allowed; anything else returns `409 Conflict`. The
 |---|---|---|---|
 | GET | `/api/reservations` | Member's current reservation | 404 |
 | POST | `/api/proposals` | Create a draft with its line items | 400 |
-| GET | `/api/proposals` | List proposals with status and total | — |
+| GET | `/api/proposals` | List proposals with status, line items and total | — |
 | GET | `/api/proposals/[id]` | Single proposal with line items | 404 |
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) | 400, 404, 409 |
 | POST | `/api/proposals/[id]/send` | Mark as sent, write `sent_emails` row, log the email to console | 404, 409 |
@@ -87,8 +87,9 @@ app/
   proposal/[id]/page.tsx    Member view
   api/                      Route handlers
 components/
-  concierge/                Trip header, category picker, item form, items list, preview dialog, proposals table
-  member/                   Hero, itinerary list, total, action bar, paid confirmation
+  concierge/                Trip header, item form with category cards, proposal builder, proposals table
+  proposal/                 Itinerary view and dialog, status badge (shared by concierge and member views)
+  member/                   Hero, action bar, paid confirmation
   ui/                       shadcn/ui
 lib/
   prisma.ts                 Prisma client singleton
@@ -108,8 +109,8 @@ prisma.config.ts
 **Concierge dashboard (`/`)** — efficient, clarity over decoration:
 1. Trip header: member, villa, destination, arrival/departure dates, number of nights.
 2. Proposal builder: category cards in two columns list the example activities with a placeholder estimate (~$500). Picking a category pre-fills the first example as the title and $500 as the price; the concierge then fills description and date/time. The added items are listed with a remove action and a running total.
-3. Actions: **Preview** (dialog showing the member rendering), **Save draft**, **Send now** (create and send in one step).
-4. Proposals table: status badge, total, created/sent dates, link to the member view, **Send** action for drafts.
+3. Actions: **Preview** (dialog showing the member rendering, shared with the table's **View**), **Save draft**, **Send now** (create and send in one step).
+4. Proposals table: status badge, total, created/sent dates, **View** (itinerary dialog, any status), **Send** for drafts, link to the member view for sent proposals.
 
 **Member view (`/proposal/[id]`)** — premium feel:
 - Serif headings, generous whitespace, muted palette, gradients and typography only (no photos).
