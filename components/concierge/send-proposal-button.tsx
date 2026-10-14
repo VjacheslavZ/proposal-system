@@ -2,26 +2,25 @@
 
 import { Send } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/api-client";
 
 export function SendProposalButton({ proposalId }: { proposalId: string }) {
   const router = useRouter();
-  const [pending, setPending] = useState(false);
+  const [pending, startTransition] = useTransition();
 
-  async function send() {
-    setPending(true);
-    try {
-      await apiRequest(`/api/proposals/${proposalId}/send`, { method: "POST" });
-      toast.success("Proposal sent");
-      router.refresh();
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      setPending(false);
-    }
+  function send() {
+    startTransition(async () => {
+      try {
+        await apiRequest(`/api/proposals/${proposalId}/send`, { method: "POST" });
+        toast.success("Proposal sent");
+        router.refresh();
+      } catch (error) {
+        toast.error((error as Error).message);
+      }
+    });
   }
 
   return (

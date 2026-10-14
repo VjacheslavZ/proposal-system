@@ -120,7 +120,8 @@ _To be written after implementation._
 
 ## Known issues
 
-_None yet._
+- An unknown or draft proposal shows the "not available" page, but the HTTP status is `200`, not `404`: with Cache Components the page streams, and `notFound()` runs inside a `<Suspense>` boundary after the headers are sent.
+- In Docker on macOS, Turbopack occasionally misses an edit to `app/globals.css`. Saving the file again fixes it; if styles still look stale, clear the cache: `docker compose exec app sh -c 'rm -rf .next/*' && docker compose restart`.
 
 ## Walkthrough
 
