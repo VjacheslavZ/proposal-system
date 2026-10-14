@@ -8,6 +8,9 @@ type CategoryInfo = {
   examples: string[];
 };
 
+/** Placeholder estimate in USD cents, shown for every example activity and pre-filled as the price. */
+export const ESTIMATED_ACTIVITY_PRICE = 50_000;
+
 export const CATEGORIES: Record<Category, CategoryInfo> = {
   dining: {
     label: "Dining",

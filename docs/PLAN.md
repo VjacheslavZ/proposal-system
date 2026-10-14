@@ -107,7 +107,7 @@ prisma.config.ts
 
 **Concierge dashboard (`/`)** — efficient, clarity over decoration:
 1. Trip header: member, villa, destination, arrival/departure dates, number of nights.
-2. Proposal builder: pick a category card (it pre-fills an example title), then fill title, description, date/time and price. The added items are listed with a remove action and a running total.
+2. Proposal builder: category cards in two columns list the example activities with a placeholder estimate (~$500). Picking a category pre-fills the first example as the title and $500 as the price; the concierge then fills description and date/time. The added items are listed with a remove action and a running total.
 3. Actions: **Preview** (dialog showing the member rendering), **Save draft**, **Send now** (create and send in one step).
 4. Proposals table: status badge, total, created/sent dates, link to the member view, **Send** action for drafts.
 

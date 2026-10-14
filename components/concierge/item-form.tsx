@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CATEGORIES, CATEGORY_KEYS } from "@/lib/categories";
+import { CATEGORIES, CATEGORY_KEYS, ESTIMATED_ACTIVITY_PRICE } from "@/lib/categories";
+import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -28,6 +29,7 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
   function selectCategory(value: Category) {
     setCategory(value);
     setTitle(CATEGORIES[value].examples[0]);
+    setPrice(String(ESTIMATED_ACTIVITY_PRICE / 100));
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -53,7 +55,7 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <fieldset>
         <legend className="mb-2 text-sm font-medium">Category</legend>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-2">
           {CATEGORY_KEYS.map((key) => {
             const { label, icon: Icon, examples } = CATEGORIES[key];
             const selected = category === key;
@@ -64,7 +66,7 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
                 aria-pressed={selected}
                 onClick={() => selectCategory(key)}
                 className={cn(
-                  "rounded-lg border p-3 text-left transition-colors hover:bg-muted",
+                  "flex flex-col justify-start rounded-lg border p-3 text-left transition-colors hover:bg-muted",
                   selected && "border-primary bg-muted ring-1 ring-primary",
                 )}
               >
@@ -72,7 +74,14 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
                   <Icon className="size-4" aria-hidden />
                   {label}
                 </span>
-                <span className="mt-1 block truncate text-xs text-muted-foreground">{examples.join(", ")}</span>
+                <ul className="mt-1.5 space-y-0.5 text-xs text-muted-foreground">
+                  {examples.map((example) => (
+                    <li key={example} className="flex justify-between gap-2">
+                      <span>{example}</span>
+                      <span className="tabular-nums">~{formatPrice(ESTIMATED_ACTIVITY_PRICE)}</span>
+                    </li>
+                  ))}
+                </ul>
               </button>
             );
           })}

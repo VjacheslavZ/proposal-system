@@ -95,7 +95,7 @@ curl -X POST http://localhost:3000/api/proposals \
 ## Assumptions
 
 - A single member and reservation are seeded: James Whitfield (`james.whitfield@example.com`) at Villa Punta Mita, Mexico, **December 15–22, 2027**. The assignment says March 15–22; the dates were moved to keep the trip in the future.
-- Prices are in USD.
+- Prices are in USD. Every example activity shows a placeholder estimate of ~$500, which is pre-filled as the price when a category is picked; the concierge adjusts it per item.
 - Time zones are ignored: dates and times are shown exactly as the concierge entered them. All dates are formatted in UTC, including `created_at` / `sent_at` in the proposals table.
 - No authentication: the dashboard is open, and the member view is reachable by its unguessable proposal ID.
 - Email sending is simulated: a row in `sent_emails` plus a console log.
@@ -112,6 +112,7 @@ curl -X POST http://localhost:3000/api/proposals \
 - Authentication for concierges and signed, expiring links for members.
 - Real email delivery and payment provider integration.
 - Automated tests (status transition rules, API route handlers, end-to-end flow).
+- A catalog of activities per category with real descriptions and estimated prices, clickable to pre-fill an item.
 
 ## What I found most interesting or challenging
 
