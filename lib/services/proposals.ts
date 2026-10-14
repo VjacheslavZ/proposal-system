@@ -46,12 +46,12 @@ export async function createProposal(input: CreateProposalInput) {
 export async function listProposals() {
   const proposals = await prisma.proposal.findMany({
     orderBy: { created_at: "desc" },
-    include: { items: { select: { price: true } } },
+    include: proposalInclude,
   });
-  return proposals.map(({ items, ...proposal }) => ({
+  return proposals.map((proposal) => ({
     ...proposal,
-    item_count: items.length,
-    total: sumPrices(items),
+    item_count: proposal.items.length,
+    total: sumPrices(proposal.items),
   }));
 }
 

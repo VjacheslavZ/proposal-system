@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
@@ -26,6 +27,8 @@ export function withErrorHandling<Args extends unknown[]>(handler: (...args: Arg
     try {
       return await handler(...args);
     } catch (error) {
+      // Let Next.js handle its own control-flow errors (e.g. `connection()` during prerendering).
+      unstable_rethrow(error);
       if (error instanceof ApiError) {
         return errorResponse(error.status, error.code, error.message);
       }

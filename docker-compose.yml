@@ -11,11 +11,8 @@ services:
       NEXT_TELEMETRY_DISABLED: "1"
       PRISMA_HIDE_UPDATE_MESSAGE: "1"
     volumes:
+      # Source code and the SQLite file (./data/dev.db) are shared with the host.
       - .:/app
       # Keep Linux-built dependencies and build output inside the container.
       - /app/node_modules
       - /app/.next
-      - db-data:/app/data
-
-volumes:
-  db-data:

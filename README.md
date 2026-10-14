@@ -24,8 +24,11 @@ Useful commands:
 ```bash
 docker compose logs -f app       # follow logs (sent "emails" are printed here)
 docker compose up -d --build     # rebuild after changing dependencies
-docker compose down -v           # stop and delete the database volume
+docker compose down              # stop the app
+rm -rf data                      # reset the database (re-created and seeded on next start)
 ```
+
+The SQLite database is the file `data/dev.db`, shared between Docker and the host, so you can open it in any SQLite client (DataGrip, DB Browser for SQLite, `sqlite3 data/dev.db`). Both run options use the same file.
 
 ### Option 2 — Without Docker
 
@@ -70,7 +73,7 @@ Status flow: `draft → sent → approved → paid`. Only single forward steps a
 |---|---|---|
 | GET | `/api/reservations` | Member's current reservation |
 | POST | `/api/proposals` | Create a draft proposal with line items |
-| GET | `/api/proposals` | List proposals with status |
+| GET | `/api/proposals` | List proposals with status, line items and total |
 | GET | `/api/proposals/[id]` | Single proposal with line items |
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) |
 | POST | `/api/proposals/[id]/send` | Mark as sent and log the "email" |
@@ -92,8 +95,8 @@ curl -X POST http://localhost:3000/api/proposals \
 ## Assumptions
 
 - A single member and reservation are seeded: James Whitfield (`james.whitfield@example.com`) at Villa Punta Mita, Mexico, **December 15–22, 2027**. The assignment says March 15–22; the dates were moved to keep the trip in the future.
-- Prices are in USD.
-- Time zones are ignored: dates and times are shown exactly as the concierge entered them.
+- Prices are in USD. Every example activity shows a placeholder estimate of ~$500, which is pre-filled as the price when a category is picked; the concierge adjusts it per item.
+- Time zones are ignored: dates and times are shown exactly as the concierge entered them. All dates are formatted in UTC, including `created_at` / `sent_at` in the proposals table.
 - No authentication: the dashboard is open, and the member view is reachable by its unguessable proposal ID.
 - Email sending is simulated: a row in `sent_emails` plus a console log.
 - Payment is simulated: the button moves the status to `paid`.
@@ -109,6 +112,7 @@ curl -X POST http://localhost:3000/api/proposals \
 - Authentication for concierges and signed, expiring links for members.
 - Real email delivery and payment provider integration.
 - Automated tests (status transition rules, API route handlers, end-to-end flow).
+- A catalog of activities per category with real descriptions and estimated prices, clickable to pre-fill an item.
 
 ## What I found most interesting or challenging
 

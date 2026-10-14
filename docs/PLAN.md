@@ -24,7 +24,7 @@ Concierge Itinerary Proposal System — Full Stack Developer assessment.
 Docker details:
 - Source code is bind-mounted into the container, so edits on the host trigger Fast Refresh.
 - `node_modules` and `.next` live in anonymous volumes (Linux-built native modules must not clash with the host).
-- The SQLite file lives in the named volume `db-data` mounted at `/app/data`.
+- The SQLite file `data/dev.db` is part of the bind mount, so Docker and the host share one database that can be opened in any SQLite client.
 - Entrypoint: `prisma generate` → `prisma migrate deploy` → `prisma db seed` → `next dev`.
 
 ## Data model
@@ -57,7 +57,7 @@ Only single forward steps are allowed; anything else returns `409 Conflict`. The
 |---|---|---|---|
 | GET | `/api/reservations` | Member's current reservation | 404 |
 | POST | `/api/proposals` | Create a draft with its line items | 400 |
-| GET | `/api/proposals` | List proposals with status and total | — |
+| GET | `/api/proposals` | List proposals with status, line items and total | — |
 | GET | `/api/proposals/[id]` | Single proposal with line items | 404 |
 | PATCH | `/api/proposals/[id]` | Update status (`sent`, `approved`, `paid`) | 400, 404, 409 |
 | POST | `/api/proposals/[id]/send` | Mark as sent, write `sent_emails` row, log the email to console | 404, 409 |
@@ -74,6 +74,11 @@ API details:
 
 Business logic lives in `lib/services/`; both route handlers and Server Components call it, so pages do not fetch their own API over HTTP.
 
+Rendering notes (Next.js 16 with Cache Components):
+- `better-sqlite3` is synchronous, so a query can finish during prerendering and be baked into static output. Pages and parameterless `GET` handlers call `await connection()` before reading data to always render at request time.
+- `withErrorHandling` calls `unstable_rethrow` first, so Next.js control-flow errors (like `connection()` during prerendering) are not turned into 500 responses.
+- Client components mutate through the API and then call `router.refresh()` to re-render Server Components with fresh data.
+
 ## Project structure
 
 ```
@@ -82,8 +87,9 @@ app/
   proposal/[id]/page.tsx    Member view
   api/                      Route handlers
 components/
-  concierge/                Trip header, category picker, item form, items list, preview dialog, proposals table
-  member/                   Hero, itinerary list, total, action bar, paid confirmation
+  concierge/                Trip header, item form with category cards, proposal builder, proposals table
+  proposal/                 Itinerary view and dialog, status badge (shared by concierge and member views)
+  member/                   Hero, action bar, paid confirmation
   ui/                       shadcn/ui
 lib/
   prisma.ts                 Prisma client singleton
@@ -102,9 +108,9 @@ prisma.config.ts
 
 **Concierge dashboard (`/`)** — efficient, clarity over decoration:
 1. Trip header: member, villa, destination, arrival/departure dates, number of nights.
-2. Proposal builder: pick a category card (it pre-fills an example title), then fill title, description, date/time and price. The added items are listed with a remove action and a running total.
-3. Actions: **Preview** (dialog showing the member rendering), **Save draft**, **Send now** (create and send in one step).
-4. Proposals table: status badge, total, created/sent dates, link to the member view, **Send** action for drafts.
+2. Proposal builder: category cards in two columns list the example activities with a placeholder estimate (~$500). Picking a category pre-fills the first example as the title and $500 as the price; the concierge then fills description and date/time. The added items are listed with a remove action and a running total.
+3. Actions: **Preview** (dialog showing the member rendering, shared with the table's **View**), **Save draft**, **Send now** (create and send in one step).
+4. Proposals table: destination (villa + location), arrival – departure dates, status badge, total and item count, created/sent dates, **View** (itinerary dialog, any status), **Send** for drafts, link to the member view for sent proposals.
 
 **Member view (`/proposal/[id]`)** — premium feel:
 - Serif headings, generous whitespace, muted palette, gradients and typography only (no photos).
@@ -123,7 +129,7 @@ prisma.config.ts
 | 1 | Scaffold Next.js + Tailwind + shadcn/ui, Docker Compose, verify hot reload | 0:40 | Done |
 | 2 | Prisma schema, migration, seed, Prisma client | 0:30 | Done |
 | 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | Done |
-| 4 | Concierge dashboard | 1:20 | |
+| 4 | Concierge dashboard | 1:20 | Done |
 | 5 | Member view and payment confirmation | 1:00 | |
 | 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | |
 | 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | |
