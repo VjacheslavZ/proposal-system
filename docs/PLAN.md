@@ -74,6 +74,11 @@ API details:
 
 Business logic lives in `lib/services/`; both route handlers and Server Components call it, so pages do not fetch their own API over HTTP.
 
+Rendering notes (Next.js 16 with Cache Components):
+- `better-sqlite3` is synchronous, so a query can finish during prerendering and be baked into static output. Pages and parameterless `GET` handlers call `await connection()` before reading data to always render at request time.
+- `withErrorHandling` calls `unstable_rethrow` first, so Next.js control-flow errors (like `connection()` during prerendering) are not turned into 500 responses.
+- Client components mutate through the API and then call `router.refresh()` to re-render Server Components with fresh data.
+
 ## Project structure
 
 ```
@@ -123,7 +128,7 @@ prisma.config.ts
 | 1 | Scaffold Next.js + Tailwind + shadcn/ui, Docker Compose, verify hot reload | 0:40 | Done |
 | 2 | Prisma schema, migration, seed, Prisma client | 0:30 | Done |
 | 3 | Services, zod validation, status rules, route handlers; smoke-test with curl | 0:50 | Done |
-| 4 | Concierge dashboard | 1:20 | |
+| 4 | Concierge dashboard | 1:20 | Done |
 | 5 | Member view and payment confirmation | 1:00 | |
 | 6 | End-to-end check from a clean database: create → send → approve → pay | 0:20 | |
 | 7 | README: run instructions, assumptions, improvements, challenges | 0:20 | |

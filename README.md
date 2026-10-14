@@ -93,7 +93,7 @@ curl -X POST http://localhost:3000/api/proposals \
 
 - A single member and reservation are seeded: James Whitfield (`james.whitfield@example.com`) at Villa Punta Mita, Mexico, **December 15–22, 2027**. The assignment says March 15–22; the dates were moved to keep the trip in the future.
 - Prices are in USD.
-- Time zones are ignored: dates and times are shown exactly as the concierge entered them.
+- Time zones are ignored: dates and times are shown exactly as the concierge entered them. All dates are formatted in UTC, including `created_at` / `sent_at` in the proposals table.
 - No authentication: the dashboard is open, and the member view is reachable by its unguessable proposal ID.
 - Email sending is simulated: a row in `sent_emails` plus a console log.
 - Payment is simulated: the button moves the status to `paid`.
