@@ -2,7 +2,7 @@
 
 import { Eye, Save, Send, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ItemForm } from "@/components/concierge/item-form";
 import type { ItineraryItem } from "@/components/proposal/itinerary";
@@ -27,45 +27,44 @@ const toDateInput = (date: Date) => date.toISOString().slice(0, 10);
 export function ProposalBuilder({ reservationId, memberName, memberEmail, villa, arrivalDate, departureDate }: Props) {
   const router = useRouter();
   const [items, setItems] = useState<ItineraryItem[]>([]);
-  const [pending, setPending] = useState(false);
+  const [pending, startTransition] = useTransition();
 
   const sortedItems = [...items].sort((a, b) => String(a.scheduled_at).localeCompare(String(b.scheduled_at)));
   const total = items.reduce((sum, item) => sum + item.price, 0);
 
-  async function submit(send: boolean) {
-    setPending(true);
-    try {
-      const proposal = await apiRequest<{ id: string }>("/api/proposals", {
-        method: "POST",
-        body: {
-          reservation_id: reservationId,
-          items: items.map(({ category, title, description, scheduled_at, price }) => ({
-            category,
-            title,
-            description,
-            scheduled_at,
-            price,
-          })),
-        },
-      });
-      setItems([]);
-
-      if (!send) {
-        toast.success("Draft saved");
-        return;
-      }
+  function submit(send: boolean) {
+    startTransition(async () => {
       try {
-        await apiRequest(`/api/proposals/${proposal.id}/send`, { method: "POST" });
-        toast.success(`Proposal sent to ${memberEmail}`);
+        const proposal = await apiRequest<{ id: string }>("/api/proposals", {
+          method: "POST",
+          body: {
+            reservation_id: reservationId,
+            items: items.map(({ category, title, description, scheduled_at, price }) => ({
+              category,
+              title,
+              description,
+              scheduled_at,
+              price,
+            })),
+          },
+        });
+        setItems([]);
+
+        if (send) {
+          try {
+            await apiRequest(`/api/proposals/${proposal.id}/send`, { method: "POST" });
+            toast.success(`Proposal sent to ${memberEmail}`);
+          } catch (error) {
+            toast.error(`Draft saved, but sending failed: ${(error as Error).message}`);
+          }
+        } else {
+          toast.success("Draft saved");
+        }
+        router.refresh();
       } catch (error) {
-        toast.error(`Draft saved, but sending failed: ${(error as Error).message}`);
+        toast.error((error as Error).message);
       }
-    } catch (error) {
-      toast.error((error as Error).message);
-    } finally {
-      setPending(false);
-      router.refresh();
-    }
+    });
   }
 
   return (
