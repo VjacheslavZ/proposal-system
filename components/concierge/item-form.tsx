@@ -23,7 +23,7 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
   const [category, setCategory] = useState<Category | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [scheduledAt, setScheduledAt] = useState(minDateTime.replace("T00:00", "T10:00"));
+  const [scheduledAt, setScheduledAt] = useState("");
   const [price, setPrice] = useState("");
 
   function selectCategory(value: Category) {
@@ -34,7 +34,8 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!category) return;
+    // `required` inputs block empty values in the browser; this guards the state as well.
+    if (!category || !scheduledAt) return;
     onAdd({
       id: crypto.randomUUID(),
       category,
@@ -44,10 +45,10 @@ export function ItemForm({ minDateTime, maxDateTime, onAdd }: Props) {
       scheduled_at: `${scheduledAt}:00.000Z`,
       price: Math.round(Number(price) * 100),
     });
-    // Keep the date so the next item for the same day is quick to add.
     setCategory(null);
     setTitle("");
     setDescription("");
+    setScheduledAt("");
     setPrice("");
   }
 

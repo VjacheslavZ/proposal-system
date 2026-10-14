@@ -85,7 +85,9 @@ export function ProposalBuilder({ reservationId, memberName, memberEmail, villa,
 
       <Card className="lg:sticky lg:top-6 lg:self-start">
         <CardHeader>
-          <CardTitle>New proposal · {items.length} items</CardTitle>
+          <CardTitle>
+            New proposal · {items.length} {items.length === 1 ? "item" : "items"}
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {sortedItems.length === 0 ? (
